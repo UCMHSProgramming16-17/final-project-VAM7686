@@ -44,20 +44,24 @@ payload1 = {'units': 'us'}
 YYYY = int(input("pick a year"))
 
 for YYYY in range(YYYY-30, YYYY):
-    time = str(YYYY)+"-02-22T12:00:00Z"
+
+    time = str(YYYY)+"-02-22T24:00:00Z"
 
     # Assemble full url
     url1 = endpoint + key1 + '/' + lat + ',' + lon + ',' + time
-
+    
     # Make a request
     r1 = requests.get(url1, params=payload1)
-    #print(r1)
 
     # deal with the information
     weather = r1.json()
-
-    Temperature = weather['currently']['temperature']
-    csvwriter.writerow([YYYY, Temperature])
+    
+    for x in range(0, 23):
+        hour = weather['hourly']['data'][x]['time']
+        print(hour)
+        Temperature = weather['hourly']['data'][x]['temperature']
+        #Time = hour['time']
+        csvwriter.writerow([hour, Temperature])
 #close writer
 csvfile.close()
 
@@ -65,11 +69,13 @@ import bokeh
 
 import pandas as pd
 
-from bokeh.charts import Scatter, output_file, save
+from bokeh.charts import HeatMap, output_file, save
 
 df = pd.read_csv('file.csv')
 
-p = Scatter(df, x='Date', y='Temperature', color='red', title="Date vs. Temperature", legend='top_right', xlabel="Date", ylabel="Temperature")
+p = HeatMap(df, x='Date', y='Temperature', values=None, stat='count', xgrid=False, ygrid=False, hover_tool=True, hover_text=None)
+
+#p = Scatter(df, x='Date', y='Temperature', color='red', title="Date vs. Temperature", legend='top_right', xlabel="Date", ylabel="Temperature")
 
 output_file('bht.html')
 
