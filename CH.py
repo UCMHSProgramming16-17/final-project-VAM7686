@@ -65,18 +65,31 @@ for YYYY in range(YYYY-30, YYYY):
 #close writer
 csvfile.close()
 
+#Plotting data points
 import bokeh
 
 import pandas as pd
 
+from bokeh.charts import Scatter, output_file, save
 from bokeh.charts import HeatMap, output_file, save
 
+#read file
 df = pd.read_csv('file.csv')
 
+#Plots a heatmap
 p = HeatMap(df, x='Date', y='Temperature', values=None, stat='count', xgrid=False, ygrid=False, hover_tool=True, hover_text=None)
 
-#p = Scatter(df, x='Date', y='Temperature', color='red', title="Date vs. Temperature", legend='top_right', xlabel="Date", ylabel="Temperature")
+output_file('HeatMap.html')
 
-output_file('bht.html')
-
+#Saves graph
 save(p)
+
+#box = BoxPlot(df, values='Temperature', label='Date', title="Temperature Date Box Plot", plot_width=400)
+
+#Creates a Scatter Plot
+v = Scatter(df, x='Date', y='Temperature', color='red', title="Date vs. Temperature", legend='top_right', xlabel="Date", ylabel="Temperature")
+
+output_file('Scatter.html')
+
+#Saves Graph as a html file
+save(v)
